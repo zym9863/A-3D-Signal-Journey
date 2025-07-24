@@ -1,7 +1,6 @@
 // 编码可视化场景
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { EncodingType, ModulationType, DigitalEncoder, Modulator, WaveformProcessor } from '../utils/waveforms';
 
 export interface EncodingSceneConfig {
@@ -25,7 +24,6 @@ export class EncodingScene {
   private originalSignalLine?: THREE.Line;
   private modulatedSignalLine?: THREE.Line;
   private animationGroup: THREE.Group;
-  private animationMixer?: THREE.AnimationMixer;
   
   // 配置
   private config: EncodingSceneConfig;
@@ -112,18 +110,15 @@ export class EncodingScene {
   }
 
   private addAxisLabels(): void {
-    const loader = new FontLoader();
-    
-    // 注意：实际使用时可能需要加载字体文件
-    // 这里使用简单的几何体作为标签
+    // 使用简单的几何体作为轴标签
     const labelGeometry = new THREE.SphereGeometry(0.1);
     const labelMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    
+
     // X轴标签 (时间)
     const timeLabel = new THREE.Mesh(labelGeometry, labelMaterial);
     timeLabel.position.set(5.5, 0, 0);
     this.scene.add(timeLabel);
-    
+
     // Y轴标签 (幅度)
     const amplitudeLabel = new THREE.Mesh(labelGeometry, labelMaterial);
     amplitudeLabel.position.set(0, 3.5, 0);

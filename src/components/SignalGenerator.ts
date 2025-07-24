@@ -310,7 +310,16 @@ export class SignalGenerator {
   }
 
   public getBitArray(): number[] {
-    return this.config.bitString.split('').map(bit => parseInt(bit));
+    // 确保比特字符串不为空，如果为空则使用配置中的默认值
+    const bitString = this.config.bitString || '10110100';
+
+    // 验证比特字符串的有效性
+    if (!/^[01]+$/.test(bitString)) {
+      console.warn('Invalid bit string, using default:', bitString);
+      return '10110100'.split('').map(bit => parseInt(bit));
+    }
+
+    return bitString.split('').map(bit => parseInt(bit));
   }
 
   public validateInput(): boolean {

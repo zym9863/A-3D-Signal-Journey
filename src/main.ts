@@ -7,7 +7,7 @@ import { TransmissionMedium, TransmissionMediumConfig } from './components/Trans
 import { EncodingType, ModulationType } from './utils/waveforms';
 
 class SignalJourneyApp {
-  private currentMode: 'encoding' | 'transmission' = 'encoding';
+  private currentMode: 'encoding' | 'transmission' | null = null;
   
   // 场景实例
   private encodingScene?: EncodingScene;
