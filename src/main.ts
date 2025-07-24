@@ -48,11 +48,11 @@ class SignalJourneyApp {
           
           <nav class="mode-selector">
             <button id="encodingModeBtn" class="mode-btn active">
-              <span class="mode-icon">📊</span>
+              <span class="mode-icon">⚡</span>
               <span class="mode-label">编码调制可视化</span>
             </button>
             <button id="transmissionModeBtn" class="mode-btn">
-              <span class="mode-icon">📡</span>
+              <span class="mode-icon">📶</span>
               <span class="mode-label">传输仿真</span>
             </button>
           </nav>
@@ -74,9 +74,9 @@ class SignalJourneyApp {
             <span>基于 Three.js 构建</span>
           </div>
           <div class="footer-controls">
-            <button id="fullscreenBtn" class="footer-btn">全屏</button>
-            <button id="helpBtn" class="footer-btn">帮助</button>
-            <button id="resetBtn" class="footer-btn">重置</button>
+            <button id="fullscreenBtn" class="footer-btn">🔳 全屏</button>
+            <button id="helpBtn" class="footer-btn">❓ 帮助</button>
+            <button id="resetBtn" class="footer-btn">🔄 重置</button>
           </div>
         </footer>
       </div>
@@ -90,7 +90,7 @@ class SignalJourneyApp {
           </div>
           <div class="modal-body">
             <div class="help-section">
-              <h3>编码调制可视化模式</h3>
+              <h3>⚡ 编码调制可视化模式</h3>
               <ul>
                 <li>输入比特流，选择编码和调制方式</li>
                 <li>观察信号波形的实时3D展示</li>
@@ -99,7 +99,7 @@ class SignalJourneyApp {
               </ul>
             </div>
             <div class="help-section">
-              <h3>传输仿真模式</h3>
+              <h3>📶 传输仿真模式</h3>
               <ul>
                 <li>选择不同的传输介质类型</li>
                 <li>调节衰减、噪声、失真参数</li>
@@ -108,12 +108,12 @@ class SignalJourneyApp {
               </ul>
             </div>
             <div class="help-section">
-              <h3>操作技巧</h3>
+              <h3>🎮 操作技巧</h3>
               <ul>
-                <li>鼠标左键拖拽：旋转视角</li>
-                <li>鼠标滚轮：缩放场景</li>
-                <li>鼠标右键拖拽：平移视角</li>
-                <li>双击：重置相机位置</li>
+                <li>🖱️ 鼠标左键拖拽：旋转视角</li>
+                <li>🔍 鼠标滚轮：缩放场景</li>
+                <li>👆 鼠标右键拖拽：平移视角</li>
+                <li>⚡ 双击：重置相机位置</li>
               </ul>
             </div>
           </div>
@@ -216,6 +216,16 @@ class SignalJourneyApp {
   private async switchMode(mode: 'encoding' | 'transmission'): Promise<void> {
     if (this.currentMode === mode) return;
 
+    // 添加切换动画类
+    this.controlPanel?.classList.add('switching');
+
+    // 为当前控制面板添加退出动画
+    const currentControls = this.controlPanel?.querySelector('.encoding-controls, .transmission-controls');
+    if (currentControls) {
+      currentControls.classList.add('fade-out');
+      await new Promise(resolve => setTimeout(resolve, 400)); // 等待退出动画完成
+    }
+
     // 清理当前模式
     this.cleanup();
 
@@ -226,6 +236,11 @@ class SignalJourneyApp {
     } else {
       await this.initializeTransmissionMode();
     }
+
+    // 移除切换动画类
+    setTimeout(() => {
+      this.controlPanel?.classList.remove('switching');
+    }, 600);
   }
 
   private async initializeEncodingMode(): Promise<void> {
@@ -241,10 +256,10 @@ class SignalJourneyApp {
         </div>
         
         <div class="scene-controls">
-          <h3>显示控制</h3>
+          <h3>🎛️ 显示控制</h3>
           <div class="control-group">
-            <button id="resetCameraBtn" class="btn btn-secondary">重置视角</button>
-            <button id="toggleAnimationBtn" class="btn btn-primary">开始动画</button>
+            <button id="resetCameraBtn" class="btn btn-secondary">🔄 重置视角</button>
+            <button id="toggleAnimationBtn" class="btn btn-primary">▶️ 开始动画</button>
           </div>
         </div>
       </div>
@@ -332,16 +347,16 @@ class SignalJourneyApp {
         </div>
         
         <div class="transmission-actions">
-          <h3>传输控制</h3>
+          <h3>📶 传输控制</h3>
           <div class="control-group">
-            <button id="startTransmissionBtn" class="btn btn-primary">开始传输</button>
-            <button id="stopTransmissionBtn" class="btn btn-secondary" disabled>停止传输</button>
-            <button id="sendSignalBtn" class="btn btn-info">发送信号</button>
+            <button id="startTransmissionBtn" class="btn btn-primary">▶️ 开始传输</button>
+            <button id="stopTransmissionBtn" class="btn btn-secondary" disabled>⏹️ 停止传输</button>
+            <button id="sendSignalBtn" class="btn btn-info">📡 发送信号</button>
           </div>
         </div>
         
         <div class="transmission-stats">
-          <h3>传输统计</h3>
+          <h3>📊 传输统计</h3>
           <div class="stats-grid">
             <div class="stat-item">
               <span class="stat-label">已发送:</span>
@@ -416,8 +431,8 @@ class SignalJourneyApp {
 
     toggleAnimationBtn.addEventListener('click', () => {
       this.encodingScene?.toggleAnimation();
-      const isAnimating = toggleAnimationBtn.textContent === '停止动画';
-      toggleAnimationBtn.textContent = isAnimating ? '开始动画' : '停止动画';
+      const isAnimating = toggleAnimationBtn.textContent?.includes('停止');
+      toggleAnimationBtn.innerHTML = isAnimating ? '▶️ 开始动画' : '⏹️ 停止动画';
     });
   }
 
